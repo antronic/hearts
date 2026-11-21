@@ -1,22 +1,31 @@
 {
-  "name": "play-cards",
-  "version": "1.0.0",
-  "description": "Real-time multiplayer website for playing card games",
-  "scripts": {
-    "postinstall": "bower install",
-    "start": "node --use-strict server.js"
-  },
-  "author": "Waitaya Krongapiradee",
-  "license": "GPL-3.0",
-  "dependencies": {
-    "babel-connect": "^6.0.2",
-    "bower": "^1.8.14",
-    "express": "^4.18.2",
-    "express-dart-sass": "^1.0.4",
-    "socket.io": "^4.7.2"
-  },
+  "name": "hearts",
   "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.6.5",
+  "scripts": {
+    "dev": "pnpm --filter @hearts/web build && pnpm --filter @hearts/server dev",
+    "dev:web": "pnpm --filter @hearts/web dev",
+    "dev:node": "pnpm --filter @hearts/web build && pnpm --filter @hearts/server start:node",
+    "build": "pnpm --filter @hearts/web build",
+    "test": "vitest run",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "storybook": "pnpm --filter @hearts/ui storybook",
+    "build-storybook": "pnpm --filter @hearts/ui build-storybook",
+    "deploy": "pnpm build && pnpm --filter @hearts/server deploy"
+  },
+  "devDependencies": {
+    "typescript": "^5.8",
+    "vitest": "3"
+  },
+  "license": "GPL-3.0",
   "engines": {
-    "node": ">= 14.10.0"
+    "node": ">=22"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
   }
 }

@@ -1,0 +1,336 @@
+/*
+ * Design tokens.
+ * Three candidate themes (glass, felt, playful), each with light + dark mode.
+ * Select with <html data-theme="glass|felt|playful" data-mode="light|dark">.
+ * Components only ever reference these semantic tokens (via Tailwind classes
+ * mapped in styles.css), never raw colors.
+ */
+
+:root {
+  /* Shared primitives */
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-rounded: ui-rounded, "SF Pro Rounded", "Nunito", "Quicksand", var(--font-system);
+  --font-serif: ui-serif, "New York", "Iowan Old Style", Georgia, serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --touch-target: 44px;
+
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-base: 280ms;
+  --duration-slow: 450ms;
+
+  --suit-red: #e5243b;
+  --suit-black: #1c1c1e;
+
+  /* Default = glass light (overridden below) */
+  color-scheme: light;
+}
+
+/* ───────────────────────── Glass (iOS Liquid Glass minimal) ───────────── */
+[data-theme="glass"],
+:root:not([data-theme]) {
+  --t-font-body: var(--font-system);
+  --t-font-display: var(--font-system);
+  --t-font-display-weight: 700;
+  --t-radius-sm: 10px;
+  --t-radius-md: 14px;
+  --t-radius-lg: 22px;
+  --t-radius-xl: 32px;
+  --t-radius-card: 9px;
+  --t-blur: 24px;
+  --motion-ease: var(--ease-spring);
+
+  --bg: #f2f2f7;
+  --bg-gradient: radial-gradient(120% 80% at 20% 0%, #ffe3e6 0%, transparent 55%),
+    radial-gradient(100% 70% at 100% 100%, #dfe9ff 0%, transparent 60%), #f2f2f7;
+  --surface: #ffffff;
+  --surface-glass: rgb(255 255 255 / 0.62);
+  --surface-border: rgb(255 255 255 / 0.7);
+  --surface-sunken: rgb(118 118 128 / 0.12);
+  --fg: #1c1c1e;
+  --fg-muted: rgb(60 60 67 / 0.78);
+  --separator: rgb(60 60 67 / 0.18);
+  --accent: #c50d28;
+  --accent-ink: #c50d28; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #1f7a37;
+  --danger-ink: #c4001a;
+  --danger: #d70015;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(229 36 59 / 0.12);
+  --success: #34c759;
+  --warning: #ff9f0a;
+  --table: radial-gradient(80% 60% at 50% 45%, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.25));
+  --table-border: rgb(255 255 255 / 0.8);
+  --table-fg: #1c1c1e;
+  --card-face: #ffffff;
+  --card-back: linear-gradient(135deg, #ff5a6e, #e5243b 55%, #b3102a);
+  --card-back-pattern: rgb(255 255 255 / 0.22);
+  --t-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 1px rgb(0 0 0 / 0.04);
+  --t-shadow-md: 0 8px 24px rgb(0 0 0 / 0.08), 0 2px 6px rgb(0 0 0 / 0.05);
+  --t-shadow-lg: 0 24px 60px rgb(0 0 0 / 0.14), 0 6px 16px rgb(0 0 0 / 0.06);
+  --t-shadow-card: 0 2px 6px rgb(0 0 0 / 0.12), 0 0 0 0.5px rgb(0 0 0 / 0.08);
+}
+[data-theme="glass"][data-mode="dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-gradient: radial-gradient(120% 80% at 20% 0%, #3a0d16 0%, transparent 55%),
+    radial-gradient(100% 70% at 100% 100%, #0d1a3a 0%, transparent 60%), #000000;
+  --surface: #1c1c1e;
+  --surface-glass: rgb(44 44 46 / 0.55);
+  --surface-border: rgb(255 255 255 / 0.12);
+  --surface-sunken: rgb(118 118 128 / 0.24);
+  --fg: #ffffff;
+  --fg-muted: rgb(235 235 245 / 0.6);
+  --separator: rgb(84 84 88 / 0.6);
+  --accent: #d61f3a;
+  --accent-ink: #ff6b7e; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #30d158;
+  --danger-ink: #ff6961;
+  --danger: #d70015;
+  --accent-soft: rgb(255 77 99 / 0.18);
+  --success: #30d158;
+  --warning: #ffd60a;
+  --table: radial-gradient(80% 60% at 50% 45%, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03));
+  --table-border: rgb(255 255 255 / 0.12);
+  --table-fg: #ffffff;
+  --card-face: #f5f5f7;
+  --t-shadow-md: 0 8px 24px rgb(0 0 0 / 0.5);
+  --t-shadow-lg: 0 24px 60px rgb(0 0 0 / 0.6);
+  --t-shadow-card: 0 2px 8px rgb(0 0 0 / 0.5);
+}
+
+/* ───────────────────────── Felt (modern card room) ───────────────────── */
+[data-theme="felt"] {
+  --t-font-body: var(--font-system);
+  --t-font-display: var(--font-serif);
+  --t-font-display-weight: 600;
+  --t-radius-sm: 8px;
+  --t-radius-md: 12px;
+  --t-radius-lg: 18px;
+  --t-radius-xl: 26px;
+  --t-radius-card: 8px;
+  --t-blur: 20px;
+  --motion-ease: var(--ease-spring);
+
+  --bg: #f4efe6;
+  --bg-gradient: linear-gradient(180deg, #f7f2e9, #ece3d3);
+  --surface: #fffdf8;
+  --surface-glass: rgb(255 253 248 / 0.72);
+  --surface-border: rgb(120 96 60 / 0.16);
+  --surface-sunken: rgb(120 96 60 / 0.1);
+  --fg: #1f2a24;
+  --fg-muted: rgb(31 42 36 / 0.74);
+  --separator: rgb(31 42 36 / 0.14);
+  --accent: #c8102e;
+  --accent-ink: #c8102e; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #23704a;
+  --danger-ink: var(--danger);
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(200 16 46 / 0.1);
+  --success: #2f8f5b;
+  --warning: #c98a12;
+  --danger: #c8102e;
+  --table: radial-gradient(90% 70% at 50% 40%, #1f7a4d 0%, #135c39 60%, #0c4329 100%);
+  --table-border: #c9a45c;
+  --table-fg: #ffffff;
+  --card-face: #fffdf6;
+  --card-back: linear-gradient(135deg, #1b3a5c, #0f2440);
+  --card-back-pattern: rgb(201 164 92 / 0.45);
+  --t-shadow-sm: 0 1px 2px rgb(40 30 10 / 0.08);
+  --t-shadow-md: 0 8px 24px rgb(40 30 10 / 0.12);
+  --t-shadow-lg: 0 24px 60px rgb(40 30 10 / 0.2);
+  --t-shadow-card: 0 2px 6px rgb(0 0 0 / 0.25), 0 0 0 0.5px rgb(0 0 0 / 0.1);
+}
+[data-theme="felt"][data-mode="dark"] {
+  color-scheme: dark;
+  --bg: #0b1410;
+  --bg-gradient: radial-gradient(120% 90% at 50% 0%, #14281e, #0b1410 70%);
+  --surface: #15211b;
+  --surface-glass: rgb(21 33 27 / 0.68);
+  --surface-border: rgb(201 164 92 / 0.22);
+  --surface-sunken: rgb(255 255 255 / 0.06);
+  --fg: #f3ecdc;
+  --fg-muted: rgb(243 236 220 / 0.6);
+  --separator: rgb(243 236 220 / 0.12);
+  --accent: #c8283f;
+  --accent-ink: #ff7a8a; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #4cc38a;
+  --danger-ink: #ff7a8a;
+  --danger: #c8283f;
+  --accent-soft: rgb(232 71 92 / 0.16);
+  --success: #4cc38a;
+  --warning: #e0b54d;
+  --table: radial-gradient(90% 70% at 50% 40%, #17603d 0%, #0e4529 60%, #082d1a 100%);
+  --table-border: #a8874a;
+  --table-fg: #ffffff;
+  --card-face: #f6f0e1;
+  --t-shadow-md: 0 8px 24px rgb(0 0 0 / 0.5);
+  --t-shadow-lg: 0 24px 60px rgb(0 0 0 / 0.6);
+  --t-shadow-card: 0 3px 10px rgb(0 0 0 / 0.5);
+}
+
+/* ───────────────────────── Playful (bold & bouncy) ───────────────────── */
+[data-theme="playful"] {
+  --t-font-body: var(--font-rounded);
+  --t-font-display: var(--font-rounded);
+  --t-font-display-weight: 800;
+  --t-radius-sm: 14px;
+  --t-radius-md: 20px;
+  --t-radius-lg: 28px;
+  --t-radius-xl: 40px;
+  --t-radius-card: 14px;
+  --t-blur: 16px;
+  --motion-ease: var(--ease-bounce);
+
+  --bg: #fff6ec;
+  --bg-gradient: radial-gradient(80% 60% at 0% 0%, #ffd6e0 0%, transparent 60%),
+    radial-gradient(80% 60% at 100% 20%, #d6f0ff 0%, transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, #fff1b8 0%, transparent 60%), #fff6ec;
+  --surface: #ffffff;
+  --surface-glass: rgb(255 255 255 / 0.8);
+  --surface-border: #1c1433;
+  --surface-sunken: #f3e9ff;
+  --fg: #1c1433;
+  --fg-muted: rgb(28 20 51 / 0.62);
+  --separator: rgb(28 20 51 / 0.12);
+  --accent: #d6115a;
+  --accent-ink: #c4104f; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #0b7a59;
+  --danger-ink: #c81e1e;
+  --danger: #d62020;
+  --accent-fg: #ffffff;
+  --accent-soft: #ffe0ec;
+  --success: #12b886;
+  --warning: #ffb400;
+  --table: radial-gradient(90% 70% at 50% 40%, #8f6bff 0%, #6c47ff 65%, #5634e0 100%);
+  --table-border: #1c1433;
+  --table-fg: #ffffff;
+  --card-face: #ffffff;
+  --card-back: repeating-linear-gradient(45deg, #ff3d7f 0 10px, #ff6fa0 10px 20px);
+  --card-back-pattern: rgb(255 255 255 / 0.35);
+  --t-shadow-sm: 2px 2px 0 #1c1433;
+  --t-shadow-md: 4px 4px 0 #1c1433;
+  --t-shadow-lg: 6px 6px 0 #1c1433;
+  --t-shadow-card: 2px 3px 0 #1c1433;
+}
+[data-theme="playful"][data-mode="dark"] {
+  color-scheme: dark;
+  --bg: #140f24;
+  --bg-gradient: radial-gradient(80% 60% at 0% 0%, #3d1438 0%, transparent 60%),
+    radial-gradient(80% 60% at 100% 30%, #102c45 0%, transparent 60%), #140f24;
+  --surface: #221a3b;
+  --surface-glass: rgb(34 26 59 / 0.85);
+  --surface-border: #a99bff;
+  --surface-sunken: #2d2450;
+  --fg: #fbf7ff;
+  --fg-muted: rgb(251 247 255 / 0.65);
+  --separator: rgb(251 247 255 / 0.14);
+  --accent: #c8186a;
+  --accent-ink: #ff7aa8; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #3ddc97;
+  --danger-ink: #ff8080;
+  --danger: #d62020;
+  --accent-soft: rgb(255 92 149 / 0.2);
+  --table: radial-gradient(90% 70% at 50% 40%, #5b3fd6 0%, #4329b0 65%, #301c85 100%);
+  --table-border: #a99bff;
+  --table-fg: #ffffff;
+  --card-face: #fffaf2;
+  --t-shadow-sm: 2px 2px 0 #000;
+  --t-shadow-md: 4px 4px 0 #000;
+  --t-shadow-lg: 6px 6px 0 #000;
+  --t-shadow-card: 2px 3px 0 #000;
+}
+
+/* ───────────────────────── Windows XP (Luna) ─────────────────────────── */
+[data-theme="xp"] {
+  --t-font-body: Tahoma, "Trebuchet MS", Verdana, "Segoe UI", sans-serif;
+  --t-font-display: "Trebuchet MS", Tahoma, Verdana, sans-serif;
+  --font-display-weight: 700;
+  --t-radius-sm: 3px;
+  --t-radius-md: 3px;
+  --t-radius-lg: 6px;
+  --t-radius-xl: 8px;
+  --t-radius-card: 4px;
+  --t-blur: 0px;
+  --motion-ease: linear; /* XP: no easing curves */
+
+  --bg: #ece9d8;
+  /* "Bliss"-style sky and hill */
+  --bg-gradient: radial-gradient(140% 60% at 30% 110%, #5aa83a 0%, #3f8f2a 38%, transparent 39%),
+    linear-gradient(180deg, #2f6fd8 0%, #5b9cf0 45%, #a9d0fb 70%, #dcecff 100%);
+  --surface: #ece9d8;
+  --surface-glass: #ece9d8;
+  --surface-border: #0831d9;
+  --surface-sunken: #ffffff;
+  --fg: #000000;
+  --fg-muted: #4d4d4d;
+  --separator: #aca899;
+  --accent: #2563d9;
+  --accent-ink: #1941a5; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #256325;
+  --danger-ink: #a52a1f;
+  --accent-fg: #ffffff;
+  --accent-soft: #c1d2ee;
+  --success: #3c9a3c;
+  --warning: #e6a100;
+  --danger: #c0392b;
+  --table: radial-gradient(90% 70% at 50% 40%, #0a8a3a 0%, #007a2f 60%, #006325 100%);
+  --table-border: #003c74;
+  --table-fg: #ffffff;
+  --card-face: #ffffff;
+  --card-back: linear-gradient(135deg, #3a7bd5, #0a46c4);
+  --card-back-pattern: rgb(255 255 255 / 0.4);
+  --t-shadow-sm: 1px 1px 0 rgb(0 0 0 / 0.25);
+  --t-shadow-md: 2px 2px 4px rgb(0 0 0 / 0.3);
+  --t-shadow-lg: 3px 3px 8px rgb(0 0 0 / 0.4);
+  --t-shadow-card: 1px 1px 2px rgb(0 0 0 / 0.45);
+
+  --xp-title: linear-gradient(180deg, #0997ff 0%, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7 100%);
+  --xp-title-fg: #ffffff;
+  --xp-btn: linear-gradient(180deg, #ffffff 0%, #ecebe6 86%, #d6d0c5 100%);
+  --xp-btn-border: #003c74;
+  --xp-btn-fg: #000000;
+  --xp-hover: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+  --xp-focus: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4, inset 2px -2px #89ade4;
+  --xp-taskbar: linear-gradient(180deg, #1f2f86 0, #3165c4 3%, #3682e5 6%, #4490e6 10%, #3883e5 12%, #2b71e0 15%, #2663da 18%, #235bd6 20%, #2258d5 23%, #2157d6 38%, #245ddb 54%, #2562df 86%, #245fdc 89%, #2158d4 92%, #1d4ec0 95%, #1941a5 98%);
+  --xp-start: radial-gradient(circle at 30% 20%, #79c879, #3c9a3c 60%, #2f7d2f);
+  --xp-window-border: #0831d9;
+  color-scheme: light;
+}
+/* XP dark = "Royale Noir"-style */
+[data-theme="xp"][data-mode="dark"] {
+  color-scheme: dark;
+  --bg: #1b1b1b;
+  --bg-gradient: radial-gradient(140% 60% at 30% 110%, #1f3d1a 0%, #18301a 38%, transparent 39%),
+    linear-gradient(180deg, #0b1633 0%, #13285a 55%, #1d3a75 100%);
+  --surface: #2b2b2b;
+  --surface-glass: #2b2b2b;
+  --surface-border: #4a4a4a;
+  --surface-sunken: #1a1a1a;
+  --fg: #f0f0f0;
+  --fg-muted: #a8a8a8;
+  --separator: #4a4a4a;
+  --accent: #2a62d6;
+  --accent-ink: #8fb3ff; /* accent as text: 4.5:1 on surfaces */
+  --success-ink: #7dcf7d;
+  --danger-ink: #ff7b6b;
+  --danger: #c0392b;
+  --accent-soft: #23345e;
+  --table: radial-gradient(90% 70% at 50% 40%, #0a5c2a 0%, #064a21 60%, #033818 100%);
+  --card-face: #f4f4f4;
+  --xp-title: linear-gradient(180deg, #5a5a5a 0%, #2a2a2a 10%, #111 60%, #000 100%);
+  --xp-btn: linear-gradient(180deg, #4a4a4a 0%, #333 86%, #222 100%);
+  --xp-btn-border: #000;
+  --xp-btn-fg: #f0f0f0;
+  --xp-taskbar: linear-gradient(180deg, #3a3a3a 0, #1c1c1c 15%, #0e0e0e 85%, #000 100%);
+  --xp-window-border: #000;
+}

@@ -1,0 +1,43 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Start here" />
+
+# Hearts design system — review build
+
+This Storybook is the place we agree on the look and feel **before any app code is written**.
+
+## How to compare the four directions
+
+Use the **Theme** and **Mode** switches in the toolbar at the top. Every component and every screen
+re-renders in the selected theme (four directions):
+
+| Theme | Idea |
+| --- | --- |
+| **Glass** | iOS "Liquid Glass" minimal: translucent surfaces, soft gradient table, system font |
+| **Felt** | Modern card room: green felt table, gold trim, serif display font, glass UI on top |
+| **Playful** | Bold and bouncy: purple table, chunky outlines, rounded font, springy motion |
+| **Windows XP** | Luna blue nostalgia: Bliss sky, blue title bars, beige buttons, taskbar with a green Start button, classic green Hearts table, Tahoma |
+
+Want everything side by side? Open **Foundations → Compare themes**.
+
+## What's in here
+
+- **Foundations**: color, typography, radius, elevation and motion tokens (one tokens file drives all three themes).
+- **Components**: iOS-style building blocks (buttons, fields, switches, segmented control, inset lists, sheets, alerts, toasts, nav and tab bars).
+- **Game**: playing card, draggable hand, trick area, player seats, score table, heart-broken moment.
+- **Screens**: every app screen in an iPhone frame. Screens are interactive: on the game table,
+  **drag a club up onto the table** (or tap it twice) to play it.
+
+## Touch & mobile rules baked in
+
+- Pointer Events for touch, pen and mouse; the play area disables text selection, long-press callouts,
+  pull-to-refresh and pinch/double-tap zoom.
+- 44pt minimum touch targets, safe-area insets, bottom sheets instead of pop-up dialogs.
+- Everything is keyboard and screen-reader accessible (cards are labelled, e.g. "Queen of Spades").
+- Respects "Reduce motion".
+
+Best viewed on your phone too — open this same link on an iPhone.
+
+## Accessibility on touch devices
+
+Every theme, including Windows XP, follows the mobile accessibility rules on touch screens: 44pt targets, no hover-only or drag-only actions, screen-reader labels, Dynamic Type and AA contrast. See **Accessibility › Touch guidelines**. Use the **Text size** menu in the toolbar to try larger system text.

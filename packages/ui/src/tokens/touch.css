@@ -1,0 +1,118 @@
+/*
+ * Touch accessibility layer (all themes, including XP).
+ * Applies only to coarse pointers (phones, tablets). Mouse and trackpad keep each theme's exact metrics,
+ * so XP stays pixel-authentic on desktop.
+ *
+ * - Apple HIG / Material: every tappable control is at least 44 x 44 pt (WCAG 2.5.8 AA asks for 24).
+ * - Inputs use 16px+ text so iOS never zooms the page on focus.
+ * - Submenus drop below their item instead of flying off the side of a narrow screen.
+ * - The fanned hand is exempt: overlapping cards are reached by sliding along the hand,
+ *   and the "Card list" sheet is the 44pt equivalent control (WCAG 2.5.8 "equivalent" exception).
+ */
+@media (pointer: coarse) {
+  [data-theme]:not([data-theme="xp"]) button:not([data-card], [data-slot="grabber"], .hit-target),
+  [data-theme="xp"] button[data-xp-off]:not([data-card]),
+  [data-theme] [role="button"],
+  [data-theme] a[href],
+  [data-theme] summary,
+  [data-theme] [data-slot="button"],
+  [data-theme] [role="tab"],
+  [data-theme] [role="radio"],
+  [data-theme] [role="switch"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  [data-theme] select,
+  [data-theme] input:not([type="checkbox"], [type="radio"], [type="range"], .sr-only),
+  [data-theme] textarea {
+    min-height: 44px;
+    font-size: max(16px, 1rem);
+  }
+  [data-theme] [role="menuitem"],
+  [data-theme] [role="menuitemcheckbox"],
+  [data-theme] [role="menuitemradio"],
+  [data-theme] [role="option"] {
+    min-height: 44px;
+  }
+  /* Checkbox and radio rows: the label is the tap target, at least 44pt tall. */
+  [data-theme]:not([data-theme="xp"]) label:has(> input[type="checkbox"], > input[type="radio"]),
+  [data-theme]:not([data-theme="xp"]) input[type="checkbox"] + label,
+  [data-theme]:not([data-theme="xp"]) input[type="radio"] + label,
+  [data-theme]:not([data-theme="xp"]) .field-row {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  /* The whole row is the target, not just the word "Left". XP.css pads XP labels to 44pt itself. */
+  [data-theme] input[type="checkbox"] + label,
+  [data-theme] input[type="radio"] + label {
+    flex: 1;
+    min-width: 44px;
+  }
+  [data-theme] input[type="range"] {
+    min-height: 44px;
+  }
+  [data-theme] [role="menu"] > li > [role="menu"] {
+    top: calc(100% - 6px);
+    left: 16px;
+    right: auto;
+  }
+
+  /* ── XP keeps its look but grows to touch size (like XP Tablet PC Edition) ── */
+  /* Title-bar, combo and balloon close buttons keep their 21px XP art; XP.css adds a 44pt ::after hit area. */
+  [data-theme="xp"] [role="menubar"] > [role="menuitem"],
+  [data-theme="xp"] [role="menu"] > [role="menuitem"],
+  [data-theme="xp"] [role="menu"] > [role="menuitemcheckbox"],
+  [data-theme="xp"] [role="menu"] > [role="menuitemradio"],
+  [data-theme="xp"] [role="listbox"] > [role="option"] {
+    min-height: 44px;
+    height: auto;
+    line-height: 44px;
+  }
+  [data-theme="xp"] menu[role="tablist"] > button,
+  [data-theme="xp"] [role="toolbar"] > button,
+  [data-theme="xp"] button[data-slot="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  [data-theme="xp"] .combobox {
+    min-height: 44px;
+  }
+}
+
+@media (pointer: coarse) {
+  [data-theme] .list-view tbody tr {
+    height: 44px;
+  }
+}
+
+/* ── XP on touch: hit areas for the small 21px art buttons, and controls inside opt-out areas ── */
+@media (pointer: coarse) {
+  [data-theme="xp"] .combobox > button::after {
+    inset: -14px -15px;
+  }
+  [data-theme="xp"] :is([data-xp-off], [data-xp-off] *) > button:not([data-card]),
+  [data-theme="xp"] [data-slot="segmented"] > button {
+    min-height: 44px;
+  }
+  [data-theme="xp"] [data-slot="segmented"] {
+    min-height: 44px;
+  }
+}
+
+/* Small visual buttons (sheet ✕, balloon ✕) keep their size and get an invisible 44pt hit area. */
+@media (pointer: coarse) {
+  .hit-target:not(.absolute, .fixed) {
+    position: relative;
+  }
+  .hit-target::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+  }
+  .hit-target.size-8::after,
+  .hit-target.h-8::after {
+    inset: -6px;
+  }
+}
+
