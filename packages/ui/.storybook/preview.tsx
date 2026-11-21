@@ -43,7 +43,7 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { theme: "felt", mode: "light", textSize: "100" },
+  initialGlobals: { theme: "xp", mode: "light", textSize: "100" },
   parameters: {
     layout: "centered",
     controls: { expanded: true },
@@ -57,7 +57,7 @@ const preview: Preview = {
       // forceTheme: story is theme-specific (e.g. the XP desktop).
       // isolateThemes: story renders several themes side by side, so keep the page root neutral
       // (theme rules match ancestors, and XP.css must not leak into the other columns).
-      root.dataset.theme = ctx.parameters.forceTheme ?? (ctx.parameters.isolateThemes ? "glass" : (ctx.globals.theme ?? "felt"));
+      root.dataset.theme = ctx.parameters.forceTheme ?? (ctx.parameters.isolateThemes ? "glass" : (ctx.globals.theme ?? "xp"));
       root.dataset.mode = ctx.globals.mode ?? "light";
       // Simulates the phone's text-size setting: text is rem-based, spacing is px.
       const ts = ctx.parameters.textSize ?? ctx.globals.textSize ?? "100";

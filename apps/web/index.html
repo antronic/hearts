@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="felt" data-mode="light">
+<html lang="en" data-theme="xp" data-mode="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -19,7 +19,7 @@
       try {
         var s = JSON.parse(localStorage.getItem("hearts:settings") || "{}");
         var m = s.mode && s.mode !== "system" ? s.mode : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        document.documentElement.dataset.theme = s.theme || "felt";
+        document.documentElement.dataset.theme = s.theme || "xp";
         document.documentElement.dataset.mode = m;
       } catch (e) {}
     </script>

@@ -20,7 +20,7 @@ export const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
   { id: "xp", label: "Windows XP", swatch: "linear-gradient(180deg,#3a8cf3,#0a49c9 55%,#2f9e2f 56%,#5cc65c)" },
 ];
 
-export const defaultSettings: Settings = { name: "", theme: "felt", mode: "system", twoTap: true, sound: true, reduceMotion: false };
+export const defaultSettings: Settings = { name: "", theme: "xp", mode: "system", twoTap: true, sound: true, reduceMotion: false };
 
 /** People shown in Settings → About. */
 export const CREDITS = {
