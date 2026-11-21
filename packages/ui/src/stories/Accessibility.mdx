@@ -1,0 +1,57 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Accessibility/Touch guidelines" />
+
+# Touch accessibility
+
+These rules apply to **every theme, including Windows XP**, whenever the device has a touch screen (`pointer: coarse`).
+With a mouse or trackpad, each theme keeps its own exact sizes, so XP still looks pixel-perfect on a desktop.
+
+Targets follow Apple's Human Interface Guidelines and Material Design (44pt / 48dp). They also meet WCAG 2.2 AA.
+
+## 1. Touch targets of 44 × 44 pt or larger
+
+- Every button, tab, segmented option, switch, menu item, list option, list-view row and text field is at least 44pt tall on touch.
+- For checkboxes and radio buttons, the whole row is the target, not just the box or the word next to it.
+- Small buttons (the ✕ on sheets, XP title-bar buttons, the combo-box arrow and the balloon ✕) keep their look and get an invisible 44pt hit area.
+- XP grows the way Windows XP Tablet PC Edition did: the same art, with roomier rows.
+- **Fanned cards** overlap, so each card shows less than 44pt. Two things make up for that:
+  - **Slide to choose.** Put a finger anywhere on the hand and slide sideways. The card under your finger rises, so you see it before you commit, and Android gives a light buzz. Lift to select. Then tap again, or push up, to play.
+  - **Card list.** The table's *Card list* button opens every card as a full-width row, grouped by suit. This is the WCAG 2.5.8 "equivalent control".
+
+## 2. Nothing depends on hover or drag
+
+| Desktop gesture | Touch / assistive alternative |
+| --- | --- |
+| Hover a menu for 400ms to open a submenu | Tap opens it at once. On narrow screens it drops below its item. |
+| Hover for a tooltip | Long-press (500ms). The tap that follows is swallowed. Tooltip text is also the button's description for screen readers. |
+| Drag a card to the table | Tap to select, tap again to play, or use the Card list. |
+| Drag an XP window | Maximize, Minimize and Close buttons, plus the taskbar. |
+| Hover menus in the menu bar | Tap a title. Tap another title to switch. |
+
+## 3. Screen readers (VoiceOver, TalkBack)
+
+- Every card is a button named in full, for example "Queen of Spades". Cards you can't play are announced as dimmed, and the selected card is announced as selected.
+- Double-tap selects a card, and double-tap again plays it. A live region announces "Queen of Spades selected", "Played Queen of Spades" or "can't be played now".
+- Icon-only buttons have labels: "Game menu", "Scores", "Close", "Minimize".
+- Menus, menu bars, list boxes, combo boxes (ARIA 1.2), tabs, toolbars (roving focus) and the details list (`role=grid`, with sortable headers and `aria-sort`) use standard ARIA roles. When a menu closes, focus returns to the button that opened it.
+
+## 4. Text size (Dynamic Type)
+
+- All text is set in `rem`, and spacing is set in `px`. When the system text size changes, text grows but layouts hold.
+- iOS: on touch devices, `html { font: -apple-system-body }` follows Settings › Display & Brightness › Text Size.
+- Android Chrome: the app's `index.html` adds `<meta name="text-scale" content="scale">` so `rem` follows the system font scale.
+- Lists, sheets, settings and menus scale all the way, including accessibility sizes.
+- The game table is a fixed surface, like a native game, so its text caps at about 115%. Anyone who needs bigger text uses the Card list.
+- Try it with the **Text size** menu in the toolbar (100%, 135% or 200%), or open the *Large text* stories.
+- Inputs are always 16px or larger, so iOS never zooms in on focus.
+
+## 5. Contrast and motion
+
+- All text meets WCAG AA (4.5:1) in every theme, in both light and dark mode. Each theme has *ink* colours (`text-accent-ink`, `text-success-ink`, `text-danger-ink`) for coloured text, and fills dark enough to carry white text.
+- `prefers-reduced-motion` turns off animations, including XP minimize, menu fades and card flights.
+- The page never pans, zooms or selects text on game surfaces (`touch-action: none`, `user-select: none`, no long-press callout).
+
+## How this is checked
+
+An automated audit runs axe-core (WCAG 2.2 AA plus target size) and a 44pt target check on every story. It covers 4 themes × light/dark on an emulated iPhone. The only remaining target-size findings are the fanned cards, which are covered by the two alternatives above.

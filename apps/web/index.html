@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="felt" data-mode="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="text-scale" content="scale" />
+    <meta name="theme-color" content="#0f3d27" />
+    <meta name="description" content="Play Hearts with friends online, or against bots offline." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Hearts" />
+    <meta property="og:title" content="Hearts" />
+    <meta property="og:description" content="Play Hearts with friends online, or against bots offline." />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Hearts</title>
+    <script>
+      try {
+        var s = JSON.parse(localStorage.getItem("hearts:settings") || "{}");
+        var m = s.mode && s.mode !== "system" ? s.mode : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = s.theme || "felt";
+        document.documentElement.dataset.mode = m;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <noscript>Hearts needs JavaScript.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

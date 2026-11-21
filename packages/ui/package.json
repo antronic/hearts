@@ -1,0 +1,34 @@
+{
+  "name": "@hearts/ui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@kobalte/core": "^0.13.14",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "solid-js": "1.9.20",
+    "tailwind-merge": "^3.7.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "10",
+    "@storybook/addon-docs": "10",
+    "@tailwindcss/vite": "^4.3.5",
+    "postcss": "^8.5.33",
+    "postcss-selector-parser": "^7.2.1",
+    "storybook": "10",
+    "storybook-solidjs-vite": "10",
+    "tailwindcss": "4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vite-plugin-solid": "2"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "main": "./src/index.ts"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@hearts/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "start:node": "tsx src/node.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p tsconfig.node.json"
+  },
+  "dependencies": {
+    "@hearts/engine": "workspace:*",
+    "@hearts/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4",
+    "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
+    "tsx": "^4.23.15",
+    "wrangler": "4",
+    "ws": "^8.23.0"
+  }
+}

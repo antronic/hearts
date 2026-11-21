@@ -1,0 +1,553 @@
+/*
+ * Windows XP theme layer, on top of the optimized XP.css (src/vendor/xp-scoped.css).
+ * - Adapts XP.css to the app (title-bar nav, taskbar tab bar, message boxes, balloons).
+ * - Recreates XP motion: menu fade, combo box slide, tooltip fade, menu-item fade-out
+ *   after a click, minimize/restore zoom. Timings follow XP's defaults.
+ * - Focus rectangles only after keyboard use (XP hides them until you press a key).
+ * - Touch: larger hit areas on coarse pointers, 16px inputs so iOS never zooms.
+ */
+
+[data-theme="xp"] {
+  /* Menu/combo/tooltip timings come from XP.css (--menu-show-delay, --menu-fade-duration,
+     --combo-slide-duration, --tooltip-*, --menu-item-fadeout-duration). */
+  --xp-minimize: 220ms; /* "Animate windows when minimizing and maximizing": caption flight */
+  --xp-card-move: 180ms; /* a played card sliding to the middle */
+  --xp-inactive-title: linear-gradient(180deg, #a9c0f5 0%, #7a96df 10%, #7d99e3 50%, #94b0f0 90%, #8aa7ee 100%);
+  --sans-serif: Tahoma, "Pixelated MS Sans Serif", Verdana, sans-serif;
+}
+
+/* ── Focus: XP only draws focus rectangles once the keyboard is used ── */
+[data-theme="xp"] button:focus:not(:focus-visible) {
+  outline: none;
+}
+[data-theme="xp"] button:focus:not(:focus-visible):not(:hover) {
+  box-shadow: none;
+}
+[data-theme="xp"] button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+/* ── Buttons: XP gradients from XP.css; keep app sizing for touch ── */
+[data-theme="xp"] button[data-slot="button"] {
+  font-family: var(--sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+}
+[data-theme="xp"] button[data-slot="button"][data-variant="primary"] {
+  /* XP "default" push button: darker blue frame */
+  border-color: #003c74;
+  box-shadow: inset -1px -1px #3d95ff, inset 1px 1px #cee7ff;
+}
+[data-theme="xp"] button[data-slot="button"][data-variant="destructive"] {
+  color: #a00;
+}
+[data-theme="xp"] button[data-slot="button"][data-variant="ghost"] {
+  color: inherit;
+  text-decoration: underline;
+}
+[data-theme="xp"] button[data-slot="button"]:disabled {
+  color: var(--gray-text);
+  border-color: #c9c7ba;
+  background: #f5f4ea;
+}
+
+/* ── Windows (sheets, alerts, Window component) ── */
+[data-theme="xp"] .window {
+  background: var(--surface);
+  color: #000;
+  font-family: var(--sans-serif);
+  font-size: 12px;
+}
+[data-theme="xp"] .title-bar {
+  font-family: "Trebuchet MS", Tahoma, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  font-weight: 700;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+[data-theme="xp"] .title-bar-text {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #fff;
+}
+[data-theme="xp"] .window.is-inactive .title-bar {
+  background: var(--xp-inactive-title);
+  text-shadow: none;
+  color: #d8e4f8;
+}
+[data-theme="xp"] .window.is-inactive {
+  box-shadow: inset -1px -1px #6b84c8, inset 1px 1px #91a8e8, inset -2px -2px #7a93d8, inset 2px 2px #a6bbf0,
+    inset -3px -3px #7d97e0, inset 3px 3px #9fb5ee;
+}
+[data-theme="xp"] .title-bar-controls button {
+  min-width: 21px;
+  min-height: 21px;
+  width: 21px;
+  height: 21px;
+  padding: 0;
+  border-radius: 3px;
+}
+[data-theme="xp"] .window-body {
+  margin: 8px 11px;
+}
+[data-theme="xp"] .xp-hide {
+  display: none !important;
+}
+/* XP-only bits are hidden in every other theme (nearest theme wins thanks to @scope) */
+@scope ([data-theme]:not([data-theme="xp"])) to ([data-theme="xp"]) {
+  .xp-only {
+    display: none !important;
+  }
+}
+:root:not([data-theme]) .xp-only {
+  display: none !important;
+}
+
+/* Sheet → XP window docked at the bottom */
+[data-theme="xp"] [data-slot="sheet"] {
+  padding: 0 0 max(env(safe-area-inset-bottom), var(--safe-bottom, 3px));
+  border: 0;
+  backdrop-filter: none;
+}
+[data-theme="xp"] [data-slot="sheet"] [data-slot="grabber"] {
+  display: none;
+}
+[data-theme="xp"] [data-slot="sheet"] .title-bar {
+  margin: 0;
+}
+
+/* Alert → XP message box */
+[data-theme="xp"] [data-slot="alert"] {
+  border: 0;
+  backdrop-filter: none;
+  text-align: left;
+  max-width: 320px;
+  border-radius: 8px 8px 0 0;
+}
+[data-theme="xp"] [data-slot="alert"] [data-slot="alert-actions"] {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 11px 11px;
+  border: 0;
+}
+[data-theme="xp"] [data-slot="alert"] [data-slot="alert-actions"] > button {
+  height: 23px;
+  min-width: 75px;
+  font-size: 11px;
+  color: #000;
+}
+
+/* ── Nav bar → window title bar ── */
+[data-theme="xp"] [data-slot="navbar"] {
+  background: var(--xp-title);
+  color: #fff;
+  text-shadow: 1px 1px #0f1089;
+  border-bottom: 1px solid #003dd7;
+}
+[data-theme="xp"] [data-slot="navbar"] h1 {
+  font-family: "Trebuchet MS", Tahoma, sans-serif;
+}
+
+/* ── Tab bar → taskbar with Start button ── */
+[data-theme="xp"] [data-slot="tabbar-wrap"] {
+  padding: 0;
+}
+[data-theme="xp"] [data-slot="tabbar"] {
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 0 4px max(env(safe-area-inset-bottom), var(--safe-bottom, 0px)) 0;
+  background: var(--xp-taskbar);
+  border: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+[data-theme="xp"] [data-slot="tabbar"] > button {
+  color: #fff;
+  border-radius: 3px;
+  margin-top: 3px;
+  min-height: 36px;
+  font-family: var(--sans-serif);
+}
+[data-theme="xp"] [data-slot="tabbar"] > button:first-child {
+  margin-top: 0;
+  min-height: 42px;
+  background: var(--xp-start);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 0 12px 12px 0;
+  text-shadow: 1px 1px 1px #1a4b1a;
+  box-shadow: inset -2px -2px 3px rgb(0 0 0 / 0.3), inset 2px 2px 3px rgb(255 255 255 / 0.35);
+}
+[data-theme="xp"] [data-slot="tabbar"] > button[aria-current="page"]:not(:first-child) {
+  background: #1e52b7;
+  box-shadow: inset 1px 1px 2px #0c3a8f;
+}
+[data-theme="xp"] [data-slot="tabbar"] > button:not(:first-child):not([aria-current="page"]) {
+  background: #2a66dc;
+  box-shadow: inset -1px -1px #1a50b8, inset 1px 1px #77a8f8;
+}
+
+/* ── Lists, inputs, segmented control ── */
+[data-theme="xp"] [data-slot="list"] {
+  border: 1px solid var(--field-border);
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+  color: #000;
+  font-family: var(--sans-serif);
+}
+[data-theme="xp"] [data-slot="list"] > * {
+  border-color: #ece9d8;
+}
+[data-theme="xp"] [data-slot="list-row"]:active {
+  background: var(--highlight);
+  color: var(--highlight-text);
+}
+[data-theme="xp"] input[type="text"]:not(.combobox > input),
+[data-theme="xp"] input[type="password"],
+[data-theme="xp"] input[type="email"],
+[data-theme="xp"] input[type="search"] {
+  height: 28px;
+  font-size: 13px;
+  font-family: var(--sans-serif);
+  box-shadow: none;
+}
+[data-theme="xp"] [data-slot="field-label"] {
+  font-family: var(--sans-serif);
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #000;
+}
+[data-theme="xp"] [data-slot="segmented"] {
+  background: transparent;
+  gap: 4px;
+  padding: 0;
+  height: auto;
+}
+[data-theme="xp"] [data-slot="segmented"] > [data-slot="segmented-thumb"] {
+  display: none;
+}
+[data-theme="xp"] [data-slot="segmented"] > button {
+  min-height: 23px;
+  color: #000;
+  font-weight: 400;
+}
+[data-theme="xp"] [data-slot="segmented"] > button[aria-checked="true"] {
+  background: linear-gradient(180deg, #cdcac3 0%, #e3e3db 8%, #e5e5de 94%, #f2f2f1 100%);
+}
+[data-theme="xp"] [data-slot="switch-control"] {
+  display: none;
+}
+[data-theme="xp"] [data-slot="switch"] label {
+  font-size: 13px;
+  font-family: var(--sans-serif);
+}
+
+/* ── Popups: drop the iOS rounding/blur the shared components carry ── */
+[data-theme="xp"] [role="menu"],
+[data-theme="xp"] [role="menu"] > *,
+[data-theme="xp"] [role="menubar"] > *,
+[data-theme="xp"] [role="listbox"],
+[data-theme="xp"] [role="listbox"] > *,
+[data-theme="xp"] [role="tooltip"]:not(.balloon) {
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+[data-theme="xp"] [role="menu"] {
+  color: #000;
+}
+
+/* ── Toast → balloon tip ── */
+[data-theme="xp"] [data-slot="toast"] {
+  background: var(--info-background);
+  color: var(--info-text);
+  border: 1px solid #000;
+  border-radius: 7px;
+  font-family: var(--sans-serif);
+  font-size: 12px;
+  box-shadow: none;
+  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.25));
+  animation: xp-fade-in var(--tooltip-fade-duration, 200ms) linear both;
+}
+
+/* ── Glass surfaces become flat XP chrome ── */
+[data-theme="xp"] .glass:not([role="menu"], [role="listbox"]),
+[data-theme="xp"] .glass-strong:not([role="menu"], [role="listbox"]) {
+  background: var(--surface);
+  border: 1px solid #7f9db9;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: #000;
+}
+
+/* ───────────────────────── XP motion ───────────────────────── */
+
+/* After a click the menu vanishes at once; XP.css fades the chosen item (.is-closing) */
+[data-theme="xp"] [role="menu"].is-fading {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+[data-theme="xp"] [role="menu"].is-fading > :not(.is-closing) {
+  visibility: hidden;
+}
+
+/* Accelerator underlines appear while Alt is held, like XP */
+[data-theme="xp"] .accel {
+  text-decoration: none;
+}
+[data-theme="xp"] .show-accel .accel {
+  text-decoration: underline;
+}
+
+/* ───────────────────────── Touch (coarse pointers) ───────────────────────── */
+@media (pointer: coarse) {
+  [data-theme="xp"] [role="menubar"] > [role="menuitem"] {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  [data-theme="xp"] [role="menu"] > [role="menuitem"],
+  [data-theme="xp"] [role="menu"] > [role="menuitemcheckbox"],
+  [data-theme="xp"] [role="menu"] > [role="menuitemradio"] {
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+  }
+  [data-theme="xp"] [role="listbox"] > [role="option"] {
+    min-height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+  }
+  [data-theme="xp"] input,
+  [data-theme="xp"] select,
+  [data-theme="xp"] textarea {
+    font-size: 16px !important; /* below 16px iOS zooms the page on focus */
+  }
+  [data-theme="xp"] [role="toolbar"] > button {
+    min-height: 40px;
+    padding: 4px 10px;
+  }
+}
+
+/* ───────────── Mouse (fine pointers): authentic XP metrics ───────────── */
+@media (pointer: fine) {
+  [data-theme="xp"] button[data-slot="button"] {
+    height: auto;
+    min-height: 23px;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+  [data-theme="xp"] input[type="text"]:not(.combobox > input),
+  [data-theme="xp"] input[type="password"],
+  [data-theme="xp"] select:not([multiple], [size]) {
+    height: 21px;
+    font-size: 11px;
+  }
+  [data-theme="xp"] .combobox {
+    height: 21px;
+  }
+  [data-theme="xp"] .combobox > input {
+    font-size: 11px;
+  }
+  [data-theme="xp"] [role="listbox"] > [role="option"] {
+    min-height: 0;
+    padding: 1px 4px;
+    font-size: 11px;
+    border-radius: 0;
+  }
+  [data-theme="xp"] .field-row {
+    min-height: 20px;
+  }
+  [data-theme="xp"] .field-row > label,
+  [data-theme="xp"] [data-slot="switch"] label,
+  [data-theme="xp"] [data-slot="field-label"] {
+    font-size: 11px;
+  }
+  [data-theme="xp"] [role="toolbar"] > button {
+    height: auto;
+    font-size: 11px;
+  }
+  [data-theme="xp"] menu[role="tablist"] > button {
+    font-size: 11px;
+    padding: 2px 10px;
+    font-weight: 400;
+  }
+}
+
+[data-theme="xp"] legend {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+  font-weight: 400;
+  color: #0046d5;
+  padding: 0 3px;
+}
+
+
+/* ───────────────────────── XP dark ("Royale Noir") ───────────────────────── */
+[data-theme="xp"][data-mode="dark"] {
+  --surface: #2b2b2b;
+  --menu: #2b2b2b;
+  --menu-bar: #1f1f1f;
+  --menu-border: #555;
+  --gray-text: #777;
+  --highlight: #3d7bff;
+  --field-border: #555;
+  --info-background: #2f2f24;
+  --info-text: #f0f0d0;
+}
+[data-theme="xp"][data-mode="dark"] .window,
+[data-theme="xp"][data-mode="dark"] [role="menu"],
+[data-theme="xp"][data-mode="dark"] [role="menubar"],
+[data-theme="xp"][data-mode="dark"] [role="toolbar"],
+[data-theme="xp"][data-mode="dark"] [data-slot="list"],
+[data-theme="xp"][data-mode="dark"] .list-view,
+[data-theme="xp"][data-mode="dark"] [role="listbox"],
+[data-theme="xp"][data-mode="dark"] .glass,
+[data-theme="xp"][data-mode="dark"] .glass-strong {
+  color: #f0f0f0;
+}
+[data-theme="xp"][data-mode="dark"] [data-slot="list"],
+[data-theme="xp"][data-mode="dark"] [role="listbox"],
+[data-theme="xp"][data-mode="dark"] .list-view,
+[data-theme="xp"][data-mode="dark"] input[type="text"],
+[data-theme="xp"][data-mode="dark"] input[type="password"] {
+  background: #1a1a1a;
+  color: #f0f0f0;
+}
+[data-theme="xp"][data-mode="dark"] .window {
+  box-shadow: inset -1px -1px #000, inset 1px 1px #333, inset -2px -2px #111, inset 2px 2px #444, inset -3px -3px #222, inset 3px 3px #3a3a3a;
+}
+[data-theme="xp"][data-mode="dark"] .title-bar {
+  background: var(--xp-title);
+  border-color: #000;
+  text-shadow: 1px 1px #000;
+}
+[data-theme="xp"][data-mode="dark"] button:not([data-xp-off], [data-xp-off] *, .title-bar-controls button, [role="toolbar"] > button, [data-slot="tabbar"] > button) {
+  background: var(--xp-btn);
+  color: #f0f0f0;
+  border-color: #000;
+}
+[data-theme="xp"][data-mode="dark"] [role="toolbar"] > button {
+  color: #f0f0f0;
+}
+
+/* XP tooltips sit just below and right of the pointer, never centred above */
+[data-theme="xp"] [role="tooltip"]:not(.balloon) {
+  top: calc(100% + 4px);
+  bottom: auto;
+  left: 12px;
+  --tw-translate-x: 0;
+  translate: 0 0;
+  transform: none;
+}
+
+/* XP dark: XP.css hard-codes black text on fields, labels, lists and options; keep them readable. */
+[data-theme="xp"][data-mode="dark"] :is(label, legend + *, [role="option"], .list-view td, .list-view th, [data-slot="field-label"], [role="listbox"]) {
+  color: var(--fg);
+}
+[data-theme="xp"][data-mode="dark"] legend {
+  color: #8fb3ff;
+}
+[data-theme="xp"][data-mode="dark"] fieldset {
+  background: var(--surface);
+  border-color: #555;
+}
+[data-theme="xp"][data-mode="dark"] .list-view th {
+  background: #3a3a3a;
+  color: var(--fg);
+  border-color: #555;
+}
+[data-theme="xp"][data-mode="dark"] .list-view tbody td {
+  color: var(--fg);
+}
+[data-theme="xp"][data-mode="dark"] .list-view:not(:focus-within) tbody tr[aria-selected="true"] > td {
+  background: #3a3a3a;
+  color: var(--fg);
+}
+
+/* ═════════════════════ XP motion: only what Windows XP itself animated ═════════════════════
+ * Windows XP's UI effects (Display Properties › Appearance › Effects) are on/off switches:
+ * menus + tooltips fade (or slide), combo boxes slide open, a clicked menu item fades out,
+ * and minimize/maximize fly a caption rectangle. Everything else changes instantly:
+ * hover, press, focus, selection, window activation, opening, closing and dialogs.
+ * No springs, no easing curves, no scaling, no blur. */
+[data-theme="xp"] *:not(.menu-item-fadeout),
+[data-theme="xp"] *::before,
+[data-theme="xp"] *::after {
+  transition: none !important;
+}
+/* iOS entrance effects (rise, pop, bounce, pulse) don't exist in XP: things just appear. */
+[data-theme="xp"] :is(.animate-rise, .animate-pop, .animate-heartbreak):not([data-slot="toast"], [data-trick-seat]) {
+  animation: none;
+}
+/* Buttons don't shrink when pressed; XP shows the pressed bevel instead. */
+[data-theme="xp"] .press:active {
+  transform: none;
+}
+/* XP dialogs don't dim or blur what's behind them. */
+[data-theme="xp"] [data-slot="overlay"] {
+  background: transparent;
+}
+/* Cards don't grow on lift or drag; they just move (like Windows Hearts). */
+[data-theme="xp"] {
+  --card-pop-scale: 1;
+}
+[data-theme="xp"] [aria-label="Current trick"] {
+  transform: none;
+  border-radius: 0;
+}
+/* Played cards slide in from the player's side in a straight line, like Windows Hearts. */
+@keyframes xp-play-north { from { translate: 0 -90px; } }
+@keyframes xp-play-south { from { translate: 0 120px; } }
+@keyframes xp-play-west { from { translate: -110px 0; } }
+@keyframes xp-play-east { from { translate: 110px 0; } }
+[data-theme="xp"] [data-trick-seat="north"] { animation: xp-play-north var(--xp-card-move) linear; }
+[data-theme="xp"] [data-trick-seat="south"] { animation: xp-play-south var(--xp-card-move) linear; }
+[data-theme="xp"] [data-trick-seat="west"] { animation: xp-play-west var(--xp-card-move) linear; }
+[data-theme="xp"] [data-trick-seat="east"] { animation: xp-play-east var(--xp-card-move) linear; }
+/* "Your turn" flashes like FlashWindowEx: a few on/off blinks, then stays lit. */
+@keyframes xp-flash {
+  0%, 49.9% { box-shadow: 0 0 0 3px #f8a900; }
+  50%, 100% { box-shadow: 0 0 0 3px transparent; }
+}
+[data-theme="xp"] .animate-turn {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  box-shadow: 0 0 0 3px #f8a900;
+  animation: xp-flash 1s step-end 4;
+}
+/* Busy: chunky stepped spin, not a smooth iOS spinner. */
+[data-theme="xp"] .animate-spin {
+  animation: spin 1s steps(8) infinite;
+}
+/* The flying caption for minimize / restore / maximize (see captionZoom in Window.tsx). */
+.xp-caption-zoom {
+  position: fixed;
+  z-index: 2147483000;
+  pointer-events: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="xp"] [data-trick-seat],
+  [data-theme="xp"] .animate-turn {
+    animation: none;
+  }
+}

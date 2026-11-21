@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "heart-game",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-11-01",
+  // The built web app (apps/web/dist). Unknown paths fall back to index.html so deep links work.
+  "assets": {
+    "directory": "../web/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "durable_objects": {
+    "bindings": [
+      { "name": "ROOM", "class_name": "RoomDO" },
+      { "name": "LOBBY", "class_name": "LobbyDO" }
+    ]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RoomDO", "LobbyDO"] }],
+  // Custom domain: Cloudflare creates the DNS record and certificate for this hostname.
+  "routes": [{ "pattern": "heart-game.jirachai.me", "custom_domain": true }],
+  "observability": { "enabled": true }
+}
